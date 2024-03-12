@@ -1,33 +1,18 @@
-export default class Ticket {
-  constructor(container) {
-    this.init(null);
-    this.container = container;
+export default class TicketForm {
+  constructor(controller) {
+    this.controller = controller;
     this.formContainer = null;
+    this.data = null;
   }
 
-  init(data) {
-    if (data) {
-      this.id = data.id;
-      this.name = data.name;
-      this.description = data.description;
-      this.status = data.status;
-      this.created = data.created;
-    } else {
-      this.id = null;
-      this.name = "";
-      this.description = "";
-      this.status = 0;
-      this.created = "";
-    }
-  }
-
-  getTicketFormHTML(action) {
+  getTicketFormHTML() {
+    const action = (this.data.id) ? "Редактировать" : "Добавить";
     const text = `<form class="ticket-form">
         <div class="ticket-form-title">${action} тикет</div>
         <label for="description" class="label">Краткое описание:</label>
-        <textarea id="description" name="ticket-description" class="input" rows="2" required></textarea>
+        <textarea id="description" name="ticket-description" class="input" rows="2" required>${this.data.name}</textarea>
         <label for="fulldescription" class="label">Подробное описание:</label>
-        <textarea id="fulldescription" name="ticket-full-description" class="input" rows="3"></textarea>
+        <textarea id="fulldescription" name="ticket-full-description" class="input" rows="3">${this.data.description}</textarea>
         <div class="ticket-buttons">
           <button type="button" class="btn btn-ok">ОК</button>
           <button type="button" class="btn btn-cancel">Отмена</button>
@@ -37,13 +22,17 @@ export default class Ticket {
     return text;
   }
 
-  initTicketForm() {
+  show(id) {
+    this.data = { id: id, name: "", description: "" };
+    if (id) {
+      this.data = this.controller.getTicket(id);
+    }
     this.formContainer = document.querySelector(".ticket-form-container");
     if (!this.formContainer) {
       const body = document.querySelector("body");
       const formContainer = document.createElement("div");
       formContainer.classList.add("ticket-form-container");
-      formContainer.innerHTML = this.getTicketFormHTML("Добавить");
+      formContainer.innerHTML = this.getTicketFormHTML();
       this.formContainer = body.appendChild(formContainer);
       const nameField = document.getElementById("description");
       nameField.focus();
@@ -53,8 +42,11 @@ export default class Ticket {
       okButton.addEventListener("click", (ev) => {
         ev.preventDefault();
         if (nameField.value.trim() !== "") {
-
-
+          if (id) {
+            this.controller.updateTicket({ id: this.id, name: nameField.value, description: descriptionField.value });
+          } else {
+            this.controller.createTicket({ name: nameField.value, description: descriptionField.value });
+          }
           body.removeChild(this.formContainer);
         } else {
           alert("Не заполнено краткое описание!");
@@ -66,22 +58,6 @@ export default class Ticket {
         ev.preventDefault();
         body.removeChild(this.formContainer);
       });
-    }
-  }
-
-  add() {
-    this.initTicketForm();
-  }
-
-  edit(id) {
-    if (id == null) {
-      return;
-    }
-  }
-
-  delete(id) {
-    if (id == null) {
-      return;
     }
   }
 }

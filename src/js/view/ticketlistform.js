@@ -1,19 +1,19 @@
-import Ticket from "./ticket";
+import TicketForm from "./ticketform";
 
-export default class TicketList {
-  constructor() {
+export default class TicketListForm {
+  constructor(controller) {
+    this.controller = controller;
+    this.ticketForm = new TicketForm(controller);
+
     this.container = document.querySelector(".ticket-list-container");
     this.render();
 
     this.addTicketButton = this.container.querySelector(".btn-add-ticket");
-
     this.addTicketButton.addEventListener("click", (ev) => {
-      const ticket = new Ticket(this.container);
-      ticket.add();
+      this.ticketForm.show(null);
     });
 
-    this.loadTickets();
-
+    this.controller.getAllTickets();
   }
 
   render() {
@@ -24,11 +24,4 @@ export default class TicketList {
       <div class="ticket-list"></div>`;
   }
 
-  loadTickets() {
-
-  }
-
-  saveTickets() {
-
-  }
 }

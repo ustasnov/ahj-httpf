@@ -1,4 +1,6 @@
-import TicketList from "./ticketlist";
+import TicketListModel from "./model/ticketlistmodel";
+import TicketListController from "./controller/ticketlistcontroller";
+import TicketListForm from "./view/ticketlistform";
 // TODO: write code here
 
 // comment this to pass build
@@ -9,6 +11,6 @@ export default function demo(value) {
   return `Demo: ${value}`;
 }
 
-const ticketList = new TicketList();
+const ticketListForm = new TicketListForm(new TicketListController(new TicketListModel()));
 
 console.log("app.js included");

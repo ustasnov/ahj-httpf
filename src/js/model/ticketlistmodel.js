@@ -1,4 +1,4 @@
-export default class Repository {
+export default class TicketListModel {
   constructor() {
     this.tickets = [];
   }
@@ -11,11 +11,11 @@ export default class Repository {
 
   }
 
-  createTicket() {
+  createTicket(data) {
 
   }
 
-  updateTicket(id) {
+  updateTicket(data) {
 
   }
 
