@@ -3,5 +3,23 @@ export default class Repository {
     this.tickets = [];
   }
 
+  getTicket(id) {
 
+  }
+
+  getAllTickets() {
+
+  }
+
+  createTicket() {
+
+  }
+
+  updateTicket(id) {
+
+  }
+
+  deleteTicket(id) {
+
+  }
 }
