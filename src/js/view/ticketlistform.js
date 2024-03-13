@@ -1,4 +1,5 @@
 import TicketForm from "./ticketform";
+import Ticket from "./ticket";
 
 export default class TicketListForm {
   constructor(controller) {
@@ -7,6 +8,17 @@ export default class TicketListForm {
 
     this.container = document.querySelector(".ticket-list-container");
     this.render();
+
+    this.ticketListEl = document.querySelector(".ticket-list");
+    controller.subscribe(this.ticketListEl, "refresh");
+    this.ticketListEl.addEventListener("refresh", (ev) => {
+      this.ticketListEl.innerHTML = "";
+      
+      Array.from(ev.detail.data).forEach((ticketData) => {
+        this.addTicket(ticketData);
+      });
+      //alert("Ticket list updated on server");
+    });
 
     this.addTicketButton = this.container.querySelector(".btn-add-ticket");
     this.addTicketButton.addEventListener("click", (ev) => {
@@ -22,6 +34,11 @@ export default class TicketListForm {
         <button class="btn btn-add-ticket">Добавить тикет</button>
       </div>
       <div class="ticket-list"></div>`;
+  }
+
+  addTicket(ticketData) {
+    const ticket = new Ticket(this.controller, ticketData);
+    this.ticketListEl.appendChild(ticket.element);
   }
 
 }

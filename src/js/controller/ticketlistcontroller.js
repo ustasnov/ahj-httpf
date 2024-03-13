@@ -3,6 +3,10 @@ export default class TicketListController {
     this.model = model;
   }
 
+  subscribe(el, ev) {
+    this.model.subscribe(el, ev);
+  }
+
   getTicket(id) {
     return this.model.getTicket(id);
   }
