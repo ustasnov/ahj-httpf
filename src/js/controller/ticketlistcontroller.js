@@ -19,9 +19,13 @@ export default class TicketListController {
     this.model.createTicket(data);
   }
 
+  toggleTicketStatus(id) {
+    this.model.toggleTicketStatus(id);
+  }
+
   updateTicket(data) {
     const ticketData = this.getTicket(data.id);
-    if (ticketData && (ticketData.name != data.name || ticketData.description != data.description)) {
+    if (ticketData && (ticketData.status != data.status || ticketData.name != data.name || ticketData.description != data.description)) {
       this.model.updateTicket(data);
     }
   }

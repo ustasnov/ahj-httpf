@@ -86,3 +86,55 @@ body {
 .hidden {
     display: none;
 }
+
+.ticket-list {
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0;
+}
+
+.ticket {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    padding: 10px;
+    border: 1px solid lightgray;
+}
+
+.row-btn {
+    width: 35px;
+    height: 35px;
+    margin-right: 5px;
+    border: 1px solid lightgray;
+    border-radius: 50%;
+    color: dimgray;
+}
+
+.row-btn:hover {
+    background-color: lightcyan;
+    border-color: lightblue;
+}
+
+.desc-container {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding-top: 9px;
+    margin: 0 20px 0 10px;
+    width: 500px;
+}
+
+.ticket-text {
+    color: dimgray;
+}
+
+.ticket-desc {
+    margin-top: 10px;
+}
+
+.ticket-created {
+    width: 120px;
+    margin-top: 9px;
+    margin-right: 10px;
+    color: dimgray;
+}
