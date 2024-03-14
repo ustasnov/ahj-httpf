@@ -11,6 +11,10 @@ export default class Ticket {
 
     this.render(element, data);
 
+    element.addEventListener("click", (ev) => {
+      this.controller.getTicket(ev.currentTarget.id);
+    });
+
     const statusButton = element.querySelector(".ticket-status");
     statusButton.addEventListener("click", (ev) => {
       const ticketEl = ev.currentTarget.closest(".ticket");
@@ -28,9 +32,9 @@ export default class Ticket {
         id: ticketEl.id,
         name: nameEl.textContent,
         description: descEl.textContent,
-        status: (statusEl.textContent == "&#10004") ? 1 : 0,
-        created: createdEl.textContent
-      }
+        status: statusEl.textContent == "&#10004" ? 1 : 0,
+        created: createdEl.textContent,
+      };
       this.controller.updateTicket(ticketData);
     });
 
@@ -42,8 +46,9 @@ export default class Ticket {
   }
 
   render(el, data) {
-    el.innerHTML =
-      `<button class="row-btn ticket-status">${data.status === 1 ? "&#10004" : ""}</button>
+    el.innerHTML = `<button class="row-btn ticket-status">${
+      data.status === 1 ? "&#10004" : ""
+    }</button>
       <div class="desc-container">
         <div class="ticket-name ticket-text">${data.name}</div>
         <div class="ticket-desc ticket-text hidden">${data.description}</div>

@@ -6,7 +6,7 @@ export default class TicketForm {
   }
 
   getTicketFormHTML() {
-    const action = (this.data.id) ? "Редактировать" : "Добавить";
+    const action = this.data.id ? "Редактировать" : "Добавить";
     const text = `<form class="ticket-form">
         <div class="ticket-form-title">${action} тикет</div>
         <label for="description" class="label">Краткое описание:</label>
@@ -43,9 +43,16 @@ export default class TicketForm {
         ev.preventDefault();
         if (nameField.value.trim() !== "") {
           if (id) {
-            this.controller.updateTicket({ id: this.id, name: nameField.value, description: descriptionField.value });
+            this.controller.updateTicket({
+              id: this.id,
+              name: nameField.value,
+              description: descriptionField.value,
+            });
           } else {
-            this.controller.createTicket({ name: nameField.value, description: descriptionField.value });
+            this.controller.createTicket({
+              name: nameField.value,
+              description: descriptionField.value,
+            });
           }
           body.removeChild(this.formContainer);
         } else {

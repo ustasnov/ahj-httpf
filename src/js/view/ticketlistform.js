@@ -11,6 +11,7 @@ export default class TicketListForm {
     this.render();
 
     this.ticketListEl = document.querySelector(".ticket-list");
+
     controller.subscribe(this.ticketListEl, "refresh");
     this.ticketListEl.addEventListener("refresh", (ev) => {
       this.ticketListEl.innerHTML = "";
@@ -21,8 +22,26 @@ export default class TicketListForm {
       //alert("Ticket list updated on server");
     });
 
+    controller.subscribe(this.ticketListEl, "refreshTicket");
+    this.ticketListEl.addEventListener("refreshTicket", (ev) => {
+      const ticketEl = document.getElementById(ev.detail.data.id);
+      if (ticketEl) {
+        let ticketDescEl = ticketEl.querySelector(".ticket-desc");
+        const isHidden = ticketDescEl.classList.contains("hidden");
+        this.ticket.render(ticketEl, ev.detail.data);
+        ticketDescEl = ticketEl.querySelector(".ticket-desc");
+        if (isHidden) {
+          console.log("remove hidden");
+          ticketDescEl.classList.remove("hidden");
+        } else {
+          console.log("add hidden");
+          ticketDescEl.classList.add("hidden");
+        }
+      }
+    });
+
     this.addTicketButton = this.container.querySelector(".btn-add-ticket");
-    this.addTicketButton.addEventListener("click", (ev) => {
+    this.addTicketButton.addEventListener("click", () => {
       this.ticketForm.show(null);
     });
 
@@ -30,8 +49,7 @@ export default class TicketListForm {
   }
 
   render() {
-    this.container.innerHTML =
-      `<div class="ticket-buttons">
+    this.container.innerHTML = `<div class="ticket-buttons">
         <button class="btn btn-add-ticket">Добавить тикет</button>
       </div>
       <div class="ticket-list"></div>`;

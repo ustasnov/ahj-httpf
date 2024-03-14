@@ -11,6 +11,10 @@ export default function demo(value) {
   return `Demo: ${value}`;
 }
 
-const ticketListForm = new TicketListForm(new TicketListController(new TicketListModel()));
+const serverUrl = "http://localhost:7070";
+
+const ticketListForm = new TicketListForm(
+  new TicketListController(new TicketListModel(serverUrl))
+);
 
 console.log("app.js included");

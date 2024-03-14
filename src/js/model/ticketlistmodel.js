@@ -1,11 +1,8 @@
 export default class TicketListModel {
-  constructor() {
-    this.tickets = [
-      { id: 1, name: "Задание 1", description: "Полное описание задания 1", status: 1, created: "10.04.24 10:00" },
-      { id: 1, name: "Задание 2", description: "Полное описание задания 2", status: 0, created: "11.04.24 12:00" },
-      { id: 1, name: "Задание 3", description: "Полное описание задания 3", status: 0, created: "13.04.24 14:00" }
-    ];
+  constructor(serverUrl) {
+    this.tickets = [];
     this.subscribers = new Map();
+    this.host = serverUrl;
   }
 
   subscribe(el, ev) {
@@ -20,36 +17,65 @@ export default class TicketListModel {
     }
   }
 
-  notify(ev) {
+  notify(ev, evData) {
     if (this.subscribers.has(ev)) {
-      Array.from(this.subscribers.get(ev)).forEach(el => {
-        el.dispatchEvent(new CustomEvent(ev, { detail: { data: this.tickets } }));
+      Array.from(this.subscribers.get(ev)).forEach((el) => {
+        el.dispatchEvent(new CustomEvent(ev, { detail: { data: evData } }));
       });
     }
   }
 
-
   getTicket(id) {
+    const notifyFunc = this.notify.bind(this);
+    const xhr = new XMLHttpRequest();
 
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) {
+        return;
+      }
+      const ticket = JSON.parse(xhr.responseText);
+      notifyFunc("refreshTicket", ticket);
+    };
+
+    xhr.open("GET", `${this.host}?method=ticketById&id=${id}`);
+    xhr.send();
   }
 
   getAllTickets() {
-    this.notify("refresh");
+    const notifyFunc = this.notify.bind(this);
+    const xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) {
+        return;
+      }
+      this.tickets = JSON.parse(xhr.responseText);
+      notifyFunc("refresh", this.tickets);
+    };
+
+    xhr.open("GET", `${this.host}?method=allTickets`);
+    xhr.send();
   }
 
   createTicket(data) {
+    const notifyFunc = this.notify.bind(this);
+    const xhr = new XMLHttpRequest();
 
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) {
+        return;
+      }
+      const ticket = JSON.parse(xhr.responseText);
+      notifyFunc("refreshTicket", ticket);
+    };
+
+    xhr.open("POST", `${this.host}?method=createTicket`);
+    xhr.send(data);
   }
 
-  toggleTicketStatus(id) {
+  toggleTicketStatus(id) {}
 
-  }
+  updateTicket(data) {}
 
-  updateTicket(data) {
-
-  }
-
-  deleteTicket(id) {
-
-  }
+  deleteTicket(id) {}
 }
