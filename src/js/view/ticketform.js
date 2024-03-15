@@ -10,9 +10,9 @@ export default class TicketForm {
     const text = `<form class="ticket-form">
         <div class="ticket-form-title">${action} тикет</div>
         <label for="description" class="label">Краткое описание:</label>
-        <textarea id="description" name="ticket-description" class="input" rows="2" required>${this.data.name}</textarea>
+        <textarea id="description" name="name" class="input" rows="2" required>${this.data.name}</textarea>
         <label for="fulldescription" class="label">Подробное описание:</label>
-        <textarea id="fulldescription" name="ticket-full-description" class="input" rows="3">${this.data.description}</textarea>
+        <textarea id="fulldescription" name="description" class="input" rows="3">${this.data.description}</textarea>
         <div class="ticket-buttons">
           <button type="button" class="btn btn-ok">ОК</button>
           <button type="button" class="btn btn-cancel">Отмена</button>
@@ -42,17 +42,25 @@ export default class TicketForm {
       okButton.addEventListener("click", (ev) => {
         ev.preventDefault();
         if (nameField.value.trim() !== "") {
+          const formEl = document.querySelector(".ticket-form");
+          const formData = new FormData(formEl);
           if (id) {
-            this.controller.updateTicket({
+            this.controller.updateTicket(formData);
+            /*
+              {
               id: this.id,
               name: nameField.value,
               description: descriptionField.value,
-            });
+              }
+            */
           } else {
-            this.controller.createTicket({
+            this.controller.createTicket(formData);
+            /*
+              {
               name: nameField.value,
               description: descriptionField.value,
-            });
+              }
+            */
           }
           body.removeChild(this.formContainer);
         } else {

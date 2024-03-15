@@ -70,6 +70,7 @@ export default class TicketListModel {
     };
 
     xhr.open("POST", `${this.host}?method=createTicket`);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.send(data);
   }
 
