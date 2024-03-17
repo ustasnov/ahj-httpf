@@ -1,6 +1,5 @@
 export default class TicketListModel {
   constructor(serverUrl) {
-    this.tickets = [];
     this.subscribers = new Map();
     this.host = serverUrl;
   }
@@ -25,7 +24,7 @@ export default class TicketListModel {
     }
   }
 
-  getTicket(id) {
+  sendQuery(method, params, event, data = null) {
     const notifyFunc = this.notify.bind(this);
     const xhr = new XMLHttpRequest();
 
@@ -33,50 +32,54 @@ export default class TicketListModel {
       if (xhr.readyState !== 4) {
         return;
       }
-      const ticket = JSON.parse(xhr.responseText);
-      notifyFunc("refreshTicket", ticket);
+      const data = JSON.parse(xhr.responseText);
+      switch (data.result) {
+        case 0:
+          notifyFunc(event, data.data);
+          break;
+        case 1:
+          notifyFunc(
+            "error",
+            `Тикет не найден на сервере. 
+            Возможно он удален другим пользователем. Обновить список тикетов?`
+          );
+          break;
+        default:
+          break;
+      }
     };
 
-    xhr.open("GET", `${this.host}?method=ticketById&id=${id}`);
-    xhr.send();
+    xhr.open(method, `${this.host}?${params}`);
+    if (data) {
+      xhr.send(data);
+    } else {
+      xhr.send();
+    }
+  }
+
+  getTicket(id) {
+    this.sendQuery("GET", `method=ticketById&id=${id}`, "refreshTicket");
   }
 
   getAllTickets() {
-    const notifyFunc = this.notify.bind(this);
-    const xhr = new XMLHttpRequest();
-
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState !== 4) {
-        return;
-      }
-      this.tickets = JSON.parse(xhr.responseText);
-      notifyFunc("refresh", this.tickets);
-    };
-
-    xhr.open("GET", `${this.host}?method=allTickets`);
-    xhr.send();
+    this.sendQuery("GET", "method=allTickets", "refresh");
   }
 
   createTicket(data) {
-    const notifyFunc = this.notify.bind(this);
-    const xhr = new XMLHttpRequest();
-
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState !== 4) {
-        return;
-      }
-      const ticket = JSON.parse(xhr.responseText);
-      notifyFunc("refreshTicket", ticket);
-    };
-
-    xhr.open("POST", `${this.host}?method=createTicket`);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.send(data);
+    this.sendQuery("POST", "method=createTicket", "refreshTicket", data);
   }
 
-  toggleTicketStatus(id) {}
+  toggleTicketStatus(id) {
+    const data = new FormData();
+    data.append("id", id);
+    this.sendQuery("POST", "method=toggleTicketStatus", "updateTicket", data);
+  }
 
-  updateTicket(data) {}
+  updateTicket(data) {
+    this.sendQuery("POST", "method=updateTicket", "updateTicket", data);
+  }
 
-  deleteTicket(id) {}
+  deleteTicket(id) {
+    this.sendQuery("DELETE", `method=deleteTicket&id=${id}`, "deleteTicket");
+  }
 }

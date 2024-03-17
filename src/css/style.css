@@ -21,7 +21,7 @@ body {
     box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
 }
 
-.ticket-form-container {
+.ticket-form-container-0 {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -32,7 +32,24 @@ body {
     margin-top: -160px;
 }
 
+.ticket-form-container,
+.dialog-form-container {
+    background: rgba(0, 0, 0, 0.4);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+}
+
 .ticket-form {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 999;
     display: flex;
     flex-direction: column;
     padding: 15px 20px;
@@ -41,9 +58,32 @@ body {
     border-radius: 10px;
     box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
     background-color: white;
+    width: 500px;
+    height: 300px;
+    margin-left: -250px;
+    margin-top: -150px;
 }
 
-.ticket-form-title {
+.dialog-form {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    padding: 15px 20px;
+    color: dimgray;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+    background-color: white;
+    width: 450px;
+    margin-left: -225px;
+    margin-top: -75px;
+}
+
+.ticket-form-title,
+.dialog-title {
     text-align: center;
     font: inherit;
     margin-bottom: 20px;
@@ -61,7 +101,8 @@ body {
     resize: none;
 }
 
-.ticket-buttons {
+.ticket-buttons,
+.dialog-buttons {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -76,6 +117,7 @@ body {
     border: 1px solid lightgray;
     border-radius: 10px;
     cursor: pointer;
+    background-color: white;
 }
 
 .btn:hover {
@@ -105,9 +147,11 @@ body {
     width: 35px;
     height: 35px;
     margin-right: 5px;
+    font-size: 18px;
     border: 1px solid lightgray;
     border-radius: 50%;
     color: dimgray;
+    background-color: white;
 }
 
 .row-btn:hover {
@@ -129,7 +173,7 @@ body {
 }
 
 .ticket-desc {
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 .ticket-created {

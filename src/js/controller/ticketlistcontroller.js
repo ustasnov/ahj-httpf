@@ -24,15 +24,7 @@ export default class TicketListController {
   }
 
   updateTicket(data) {
-    const ticketData = this.getTicket(data.id);
-    if (
-      ticketData &&
-      (ticketData.status != data.status ||
-        ticketData.name != data.name ||
-        ticketData.description != data.description)
-    ) {
-      this.model.updateTicket(data);
-    }
+    this.model.updateTicket(data);
   }
 
   deleteTicket(id) {

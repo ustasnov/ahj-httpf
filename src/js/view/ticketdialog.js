@@ -1,4 +1,6 @@
-export default class TicketForm {
+import MessageDialog from "./messagedialog";
+
+export default class TicketDialog {
   constructor(controller) {
     this.controller = controller;
     this.formContainer = null;
@@ -6,13 +8,13 @@ export default class TicketForm {
   }
 
   getTicketFormHTML() {
-    const action = this.data.id ? "Редактировать" : "Добавить";
+    const action = this.data ? "Изменить" : "Добавить";
     const text = `<form class="ticket-form">
         <div class="ticket-form-title">${action} тикет</div>
         <label for="description" class="label">Краткое описание:</label>
-        <textarea id="description" name="name" class="input" rows="2" required>${this.data.name}</textarea>
+        <textarea id="description" name="name" class="input" rows="2" required></textarea>
         <label for="fulldescription" class="label">Подробное описание:</label>
-        <textarea id="fulldescription" name="description" class="input" rows="3">${this.data.description}</textarea>
+        <textarea id="fulldescription" name="description" class="input" rows="3"></textarea>
         <div class="ticket-buttons">
           <button type="button" class="btn btn-ok">ОК</button>
           <button type="button" class="btn btn-cancel">Отмена</button>
@@ -22,11 +24,8 @@ export default class TicketForm {
     return text;
   }
 
-  show(id) {
-    this.data = { id: id, name: "", description: "" };
-    if (id) {
-      this.data = this.controller.getTicket(id);
-    }
+  show(data) {
+    this.data = data;
     this.formContainer = document.querySelector(".ticket-form-container");
     if (!this.formContainer) {
       const body = document.querySelector("body");
@@ -38,40 +37,41 @@ export default class TicketForm {
       nameField.focus();
       const descriptionField = document.getElementById("fulldescription");
 
+      if (this.data) {
+        nameField.value = this.data.name;
+        descriptionField.value = this.data.description;
+      }
+
       const okButton = this.formContainer.querySelector(".btn-ok");
       okButton.addEventListener("click", (ev) => {
         ev.preventDefault();
         if (nameField.value.trim() !== "") {
           const formEl = document.querySelector(".ticket-form");
           const formData = new FormData(formEl);
-          if (id) {
+          if (this.data) {
+            formData.append("id", this.data.id);
+            formData.append("status", this.data.status);
+            formData.append("created", this.data.created);
             this.controller.updateTicket(formData);
-            /*
-              {
-              id: this.id,
-              name: nameField.value,
-              description: descriptionField.value,
-              }
-            */
           } else {
             this.controller.createTicket(formData);
-            /*
-              {
-              name: nameField.value,
-              description: descriptionField.value,
-              }
-            */
           }
           body.removeChild(this.formContainer);
         } else {
-          alert("Не заполнено краткое описание!");
+          new MessageDialog(
+            "message",
+            "Не заполнено краткое описание!",
+            "Надо исправить"
+          ).show();
         }
+        ev.stopPropagation();
       });
 
       const cancelButton = this.formContainer.querySelector(".btn-cancel");
       cancelButton.addEventListener("click", (ev) => {
         ev.preventDefault();
         body.removeChild(this.formContainer);
+        ev.stopPropagation();
       });
     }
   }

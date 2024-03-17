@@ -1,10 +1,6 @@
 dist
 doc
 
-# my
-.github
-.appveyor.yml
-
 # Logs
 logs
 *.log
